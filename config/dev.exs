@@ -46,7 +46,7 @@ config :phxgpu, PhxgpuWeb.Endpoint,
 config :phxgpu, PhxgpuWeb.Endpoint,
   live_reload: [
     patterns: [
-      ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg|wgsl)$",
       ~r"priv/gettext/.*(po)$",
       ~r"lib/phxgpu_web/(controllers|live|components)/.*(ex|heex)$"
     ]

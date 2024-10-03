@@ -35,25 +35,18 @@ class Renderer {
         this.presentationFormat = presentationFormat;
     }
 
-    createRenderPipeline() {
+    async loadShaders() {
+        let response = await fetch('/shaders/vertex.wgsl');
+        const vertexShader = await response.text();
+        response = await fetch('/shaders/fragment.wgsl');
+        const fragmentShader = await response.text();
+        return [vertexShader, fragmentShader].join('\n');
+    }
+
+    async createRenderPipeline() {
         // Create a simple shader (WGSL) for rendering
         const shaderModule = this.device.createShaderModule({
-            code: `
-      @vertex
-      fn vs_main(@builtin(vertex_index) vertexIndex : u32) -> @builtin(position) vec4<f32> {
-        var pos = array<vec2<f32>, 3>(
-          vec2<f32>(0.0, 0.5),
-          vec2<f32>(-0.5, -0.5),
-          vec2<f32>(0.5, -0.5)
-        );
-        return vec4<f32>(pos[vertexIndex], 0.0, 1.0);
-      }
-
-      @fragment
-      fn fs_main() -> @location(0) vec4<f32> {
-        return vec4<f32>(0.4, 0.8, 1.0, 1.0); // Blue color
-      }
-    `
+            code: await this.loadShaders()
         });
 
         // Define the pipeline
@@ -114,7 +107,7 @@ class Renderer {
         if (!this.device) {
             return;
         }
-        this.createRenderPipeline();
+        await this.createRenderPipeline();
         this.renderLoop();
     }
 }
